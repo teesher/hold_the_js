@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>hello</h1>
+<h1>Recipe Search</h1>
+<form action="" method="post">
+    {% csrf_token %}
+    <label for="recipe_search">Enter a recipe name: </label>
+    <input id="recipe_search" type="text" name="recipe_search" value="{{ recipe_search_val }}">
+    <input type="submit" value="OK">
+</form>
+
+<h2>Results for search: {{ recipe_search_val }}</h2>
+<ul>
+    {% for item in recipe_urls %}
+        <li>{{ item }}</li>
+    {% endfor %}
+</ul>
 {% endblock content %}
