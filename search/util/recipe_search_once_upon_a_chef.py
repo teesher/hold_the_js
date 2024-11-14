@@ -1,36 +1,21 @@
 from .recipe_search_base import (
-    RecipeSearchBase, 
-    STATUS_CODE_OK, 
-    DEFAULT_TIMEOUT
+    RecipeSearchBase
 )
-from urllib.parse import quote
-from bs4 import BeautifulSoup as bs
-import requests
 import logging
 
 
 LOGGER = logging.getLogger(__name__)
 
 class RecipeSearchOnceUponAChef(RecipeSearchBase):
-    def _get_recipe_result_urls(self, search_string: str):
+    def _get_recipe_result_urls(self):
         recipe_result_urls = []
-        url_safe_search_string = quote(search_string)
-        url = self._base_url + self._base_url_search_path + url_safe_search_string
 
-        response = requests.get(url=url, timeout=DEFAULT_TIMEOUT)
+        # Find list of search results
+        ul_ele = self._search_soup.find("ul", {"class": "ajaxresults"}) # config?
 
-        if response.status_code == STATUS_CODE_OK:
-            soup = bs(response.text, "html.parser")
-
-            # find list of search results
-            ul_ele = soup.find("ul", {"class": "ajaxresults"}) # config?
-
-            # find urls to recipes
-            for a_ele in ul_ele.find_all("a"):
-                recipe_result_urls.append(a_ele.get('href'))
-        else:
-            # TODO set up django error handling
-            LOGGER.error("Bad request")
+        # Find urls to recipes
+        for a_ele in ul_ele.find_all("a"):
+            recipe_result_urls.append(a_ele.get('href'))
 
         return recipe_result_urls
     
@@ -41,3 +26,25 @@ class RecipeSearchOnceUponAChef(RecipeSearchBase):
             recipe_print_urls.append(f"{recipe_result_url}?recipe_print=yes")
 
         return recipe_print_urls
+    
+    def _get_recipe_names(self):
+        recipe_names = []
+        # Find list of search results
+        ul_ele = self._search_soup.find("ul", {"class": "ajaxresults"}) # config?
+
+        # Find names of recipes
+        for a_ele in ul_ele.find_all("a"):
+            recipe_names.append(a_ele.text)
+
+        return recipe_names
+    
+    def _get_recipe_image_urls(self):
+        recipe_image_urls = []
+        # Find list of search results
+        ul_ele = self._search_soup.find("ul", {"class": "ajaxresults"}) # config?
+
+        # Find image urls of recipes
+        for img_ele in ul_ele.find_all("img"):
+            recipe_image_urls.append(img_ele['src'])
+
+        return recipe_image_urls
