@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form action="" method="post" class = 'card p-3 bg-light'>
+    {% csrf_token %}
+    <div class="form-group mb-4">
+        <label for="recipe_search">Enter a recipe name: </label>
+        <input id="recipe_search" type="text" name="recipe_search" value="{{ recipe_search_val }}" class="form-control">
+    </div>
+    <input type="submit" class="btn btn-dark" value="OK">
+</form>
+
+{% if recipe_search_val %}
+    <h5>Results for search: {{ recipe_search_val }}</h5>
+    <div class="container">
+        <div class="row">
+            {% for recipe in recipes %}
+                <div class="col-md-3 mb-4">
+                    <div class="card h-100">
+                        <a href="{{ recipe.url }}" class="text-decoration-none">
+                            <img src="{{ recipe.image_url }}" class="card-img-top" alt="{{ recipe.title }}">
+                            <div class="card-body text-center">
+                                <p class="card-title text-dark">{{ recipe.title }}</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+{% endblock content %}
