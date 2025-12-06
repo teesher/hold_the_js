@@ -1,6 +1,6 @@
 from flask import Flask, redirect, jsonify
 import logging
-from util.recipe_search_base import RecipeSearchBase
+from util.recipe_base import RecipeBase
 from util.helpers import get_recipe_object_from_url
 
 # Configure logging
@@ -23,7 +23,7 @@ def process_url(url):
     """
     logger.info(f"Processing URL: {url[:100]}")
     
-    recipe_object: RecipeSearchBase | None = get_recipe_object_from_url(url)
+    recipe_object: RecipeBase | None = get_recipe_object_from_url(url)
     
     if recipe_object is None:
         logger.warning(f"Invalid URL: {url[:100]}")

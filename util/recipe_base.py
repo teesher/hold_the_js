@@ -7,7 +7,7 @@ STATUS_CODE_OK = 200
 # Reduced timeout from 300s to 30s to prevent resource exhaustion
 DEFAULT_TIMEOUT = 30
 
-class RecipeSearchBase():
+class RecipeBase():
     def __init__(self, url):
         """
         Initialize with a URL.

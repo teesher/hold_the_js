@@ -1,11 +1,11 @@
-from .recipe_search_base import (
-    RecipeSearchBase
+from .recipe_base import (
+    RecipeBase
 )
 import logging
 
 
 LOGGER = logging.getLogger(__name__)
 
-class RecipeSearchOnceUponAChef(RecipeSearchBase):
+class RecipeOnceUponAChef(RecipeBase):
     def _get_recipe_print_url(self, url, _):
         return f"{url}?recipe_print=yes"

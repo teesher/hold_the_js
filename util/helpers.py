@@ -2,8 +2,8 @@
 Helper functions for recipe URL processing.
 """
 from typing import Optional
-from .recipe_search_base import RecipeSearchBase
-from .recipe_search_once_upon_a_chef import RecipeSearchOnceUponAChef
+from .recipe_base import RecipeBase
+from .recipe_once_upon_a_chef import RecipeOnceUponAChef
 
 ALLOWED_URL_PREFIX = 'https://www.onceuponachef.com'
 
@@ -11,13 +11,13 @@ class URLValidationError(Exception):
     """Raised when URL validation fails."""
     pass
 
-def get_recipe_object_from_url(url: str) -> Optional[RecipeSearchBase]:
+def get_recipe_object_from_url(url: str) -> Optional[RecipeBase]:
     if not url:
         return None
     
     try:
         validated_url = validate_url(url)
-        return RecipeSearchOnceUponAChef(validated_url)
+        return RecipeOnceUponAChef(validated_url)
     except URLValidationError:
         return None
     except Exception:

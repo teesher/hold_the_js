@@ -1,12 +1,12 @@
-from .recipe_search_base import (
-    RecipeSearchBase
+from .recipe_base import (
+    RecipeBase
 )
 import logging
 import re
 
 LOGGER = logging.getLogger(__name__)
 
-# class RecipeSearchSaltAndLavender(RecipeSearchBase):
+# class RecipeSaltAndLavender(RecipeBase):
 #     def _get_recipe_result_urls(self):
 #         recipe_result_urls = []
 
