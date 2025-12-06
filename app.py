@@ -1,5 +1,14 @@
-from flask import Flask, redirect
-from util.recipe_search_once_upon_a_chef import RecipeSearchOnceUponAChef
+from flask import Flask, redirect, jsonify
+import logging
+from util.recipe_search_base import RecipeSearchBase
+from util.helpers import get_recipe_object_from_url
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
@@ -9,5 +18,26 @@ def hello_world():
 
 @app.route("/<path:url>")
 def process_url(url):
-    rs_once_upon_a_chef = RecipeSearchOnceUponAChef(url)
-    return redirect(rs_once_upon_a_chef.get_recipe_print_url())
+    """
+    Process onceuponachef.com URL and redirect to print version.
+    """
+    logger.info(f"Processing URL: {url[:100]}")
+    
+    recipe_object: RecipeSearchBase | None = get_recipe_object_from_url(url)
+    
+    if recipe_object is None:
+        logger.warning(f"Invalid URL: {url[:100]}")
+        return jsonify({
+            "error": "Invalid URL",
+            "message": "url not supported"
+        }), 400
+    
+    try:
+        print_url = recipe_object.get_recipe_print_url()
+        logger.info(f"Redirecting to: {print_url[:100]}")
+        return redirect(print_url, code=302)
+    except Exception as e:
+        logger.error(f"Error: {e}")
+        return jsonify({
+            "error": "Failed to process recipe"
+        }), 500

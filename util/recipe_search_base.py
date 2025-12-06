@@ -4,18 +4,37 @@ import requests
 from bs4 import BeautifulSoup as bs
 
 STATUS_CODE_OK = 200
-DEFAULT_TIMEOUT = 300
+# Reduced timeout from 300s to 30s to prevent resource exhaustion
+DEFAULT_TIMEOUT = 30
 
 class RecipeSearchBase():
     def __init__(self, url):
+        """
+        Initialize with a URL.
+        Note: URL should already be validated before reaching here.
+        """
         self.url = url
+        self.logger = logging.getLogger(self.__class__.__name__)
 
     def get_recipe_print_url(self):
-        print(f"getting recipe print URL for {self.url}")
+        """
+        Get the print-friendly URL for the recipe.
+        
+        Returns:
+            str: The print URL
+        """
+        self.logger.info(f"Getting recipe print URL for {self.url}")
         return self._get_recipe_print_url(self.url, self._retrieve_soup_from_url())
     
     def _retrieve_soup_from_url(self):
-        print("Retrieving soup. . .")
+        """
+        Retrieve and parse HTML from the URL.
+        
+        Returns:
+            BeautifulSoup object or None
+        """
+        self.logger.info("Retrieving HTML content...")
+        
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -24,11 +43,29 @@ class RecipeSearchBase():
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1'
         }
-        response = requests.get(url=self.url, headers=headers, timeout=DEFAULT_TIMEOUT)
-        if response.status_code == STATUS_CODE_OK:
-            return bs(response.text, "html.parser")
-        else:
-            print(f"Bad request - Status code: {response.status_code}")
+        
+        try:
+            response = requests.get(
+                url=self.url, 
+                headers=headers, 
+                timeout=DEFAULT_TIMEOUT
+            )
+            
+            if response.status_code == STATUS_CODE_OK:
+                return bs(response.text, "html.parser")
+            else:
+                self.logger.warning(f"Bad request - Status code: {response.status_code}")
+                return None
+                
+        except requests.exceptions.Timeout:
+            self.logger.error(f"Request timed out after {DEFAULT_TIMEOUT}s")
+            return None
+        except requests.exceptions.RequestException as e:
+            self.logger.error(f"Request failed: {e}")
+            return None
+        except Exception as e:
+            self.logger.error(f"Unexpected error: {e}")
+            return None
     
     @abc.abstractmethod
     def _get_recipe_print_url(self):
