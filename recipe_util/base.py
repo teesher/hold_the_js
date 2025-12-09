@@ -1,4 +1,5 @@
 import abc
+import re
 import logging
 import requests
 from bs4 import BeautifulSoup as bs
@@ -8,12 +9,12 @@ STATUS_CODE_OK = 200
 DEFAULT_TIMEOUT = 30
 
 class RecipeBase():
-    def __init__(self, url):
+    def __init__(self, url, base_url):
         """
         Initialize with a URL.
-        Note: URL should already be validated before reaching here.
         """
         self.url = url
+        self.base_url = base_url
         self.logger = logging.getLogger(self.__class__.__name__)
 
     def get_recipe_print_url(self):
@@ -29,7 +30,7 @@ class RecipeBase():
             soup=self._retrieve_soup_from_url()
         )
     
-    def _retrieve_soup_from_url(self):
+    def _retrieve_soup_from_url(self) -> bs:
         """
         Retrieve and parse HTML from the URL.
         
@@ -68,6 +69,17 @@ class RecipeBase():
         except Exception as e:
             self.logger.error(f"Unexpected error: {e}")
             return None
+        
+    def _get_wprm_print_url(self):
+        wprm_print_url = f"{self.base_url}/wprm_print{self.url.replace(self.base_url, '')}"
+        soup = self._retrieve_soup_from_url()
+
+        if wprm_print_url in soup.text:
+            return wprm_print_url
+        else:
+            # sometimes print url is not exactly same as on initial recipe page
+            print_a_tags = soup.find_all("a", href=re.compile(f"{self.base_url}/wprm_print/"))
+            return print_a_tags[0]["href"]
     
     @abc.abstractmethod
     def _get_recipe_print_url(self):
