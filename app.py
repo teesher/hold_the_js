@@ -1,6 +1,6 @@
 from flask import Flask, redirect, jsonify
 import logging
-from util.recipe_base import RecipeBase
+from recipe_util.base import RecipeBase
 from util.helpers import get_recipe_object_from_url
 
 # Configure logging

@@ -11,8 +11,14 @@ if you are on `https://www.bloat-recipe.com/another-bloated-recipe`
 
 change url to: `https://www.hold-the-js.xyz/https://www.bloat-recipe.com/another-bloated-recipe`
 
+## how it works
+1. url of recipe as param is validated in app.py and recipe site specific class object is instantiated
+2. print url is retrieved in way that is specific to that recipe site
+3. user redirected to print url
+
 ### supported domains
 1. `https://www.onceuponachef.com`
 2. `https://www.saltandlavender.com`
+3. `https://www.allrecipes.com`
 
 ### domains in progress
