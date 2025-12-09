@@ -2,14 +2,16 @@
 Helper functions for recipe URL processing.
 """
 from typing import Optional, Type
-from .recipe_base import RecipeBase
-from .recipe_once_upon_a_chef import RecipeOnceUponAChef
-from .recipe_salt_and_lavender import RecipeSaltAndLavender
+from recipe_util.base import RecipeBase
+from recipe_util.once_upon_a_chef import RecipeOnceUponAChef
+from recipe_util.salt_and_lavender import RecipeSaltAndLavender
+from recipe_util.all_recipes import RecipeAllRecipes
 
 # Map URL prefixes to their corresponding recipe classes
 URL_PREFIX_TO_CLASS: dict[str, Type[RecipeBase]] = {
     'https://www.onceuponachef.com': RecipeOnceUponAChef,
     'https://www.saltandlavender.com': RecipeSaltAndLavender,
+    'https://www.allrecipes.com': RecipeAllRecipes
 }
 
 class URLValidationError(Exception):

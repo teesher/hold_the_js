@@ -1,4 +1,4 @@
-from .recipe_base import RecipeBase
+from .base import RecipeBase
 import logging
 from bs4 import BeautifulSoup as bs
 
