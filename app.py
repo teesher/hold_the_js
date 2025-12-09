@@ -18,9 +18,6 @@ def hello_world():
 
 @app.route("/<path:url>")
 def process_url(url):
-    """
-    Process onceuponachef.com URL and redirect to print version.
-    """
     logger.info(f"Processing URL: {url[:100]}")
     
     recipe_object: RecipeBase | None = get_recipe_object_from_url(url)

@@ -24,7 +24,10 @@ class RecipeBase():
             str: The print URL
         """
         self.logger.info(f"Getting recipe print URL for {self.url}")
-        return self._get_recipe_print_url(self.url, self._retrieve_soup_from_url())
+        return self._get_recipe_print_url(
+            url=self.url, 
+            soup=self._retrieve_soup_from_url()
+        )
     
     def _retrieve_soup_from_url(self):
         """
@@ -33,13 +36,11 @@ class RecipeBase():
         Returns:
             BeautifulSoup object or None
         """
-        self.logger.info("Retrieving HTML content...")
         
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.5',
-            'Accept-Encoding': 'gzip, deflate, br',
             'Connection': 'keep-alive',
             'Upgrade-Insecure-Requests': '1'
         }
@@ -52,6 +53,7 @@ class RecipeBase():
             )
             
             if response.status_code == STATUS_CODE_OK:
+                self.logger.info(f"Request successful for: {self.url}")
                 return bs(response.text, "html.parser")
             else:
                 self.logger.warning(f"Bad request - Status code: {response.status_code}")
