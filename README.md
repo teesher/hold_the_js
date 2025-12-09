@@ -13,6 +13,6 @@ change url to: `https://www.hold-the-js.xyz/https://www.bloat-recipe.com/another
 
 ### supported domains
 1. `https://www.onceuponachef.com`
+2. `https://www.saltandlavender.com`
 
 ### domains in progress
-1. `https://www.saltandlavender.com`
