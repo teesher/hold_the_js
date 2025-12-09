@@ -20,5 +20,13 @@ change url to: `https://www.hold-the-js.xyz/https://www.bloat-recipe.com/another
 1. `https://www.onceuponachef.com`
 2. `https://www.saltandlavender.com`
 3. `https://www.allrecipes.com`
+4. `https://eatwithclarity.com`
+5. `https://www.culinaryhill.com`
+6. `https://cookingwithayeh.com`
+7. `https://feelgoodfoodie.net`
 
 ### domains in progress
+1. `https://eatwithclarity.com`
+2. `https://www.culinaryhill.com`
+3. `https://cookingwithayeh.com`
+4. `https://feelgoodfoodie.net`

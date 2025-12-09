@@ -3,16 +3,7 @@ Helper functions for recipe URL processing.
 """
 from typing import Optional, Type
 from recipe_util.base import RecipeBase
-from recipe_util.once_upon_a_chef import RecipeOnceUponAChef
-from recipe_util.salt_and_lavender import RecipeSaltAndLavender
-from recipe_util.all_recipes import RecipeAllRecipes
-
-# Map URL prefixes to their corresponding recipe classes
-URL_PREFIX_TO_CLASS: dict[str, Type[RecipeBase]] = {
-    'https://www.onceuponachef.com': RecipeOnceUponAChef,
-    'https://www.saltandlavender.com': RecipeSaltAndLavender,
-    'https://www.allrecipes.com': RecipeAllRecipes
-}
+from .constants import URL_PREFIX_TO_CLASS
 
 class URLValidationError(Exception):
     """Raised when URL validation fails."""
@@ -30,11 +21,21 @@ def get_recipe_object_from_url(url: str) -> Optional[RecipeBase]:
     """
     try:
         validated_url, recipe_class = validate_url_and_get_recipe_class(url)
-        return recipe_class(validated_url)
+        base_url = get_base_url(validated_url)
+        return recipe_class(validated_url, base_url)
     except URLValidationError:
         return None
     except Exception:
         return None
+    
+def get_base_url(url: str) -> str:
+    """
+    generate base url for given url
+    """
+    valid_tld = [".com", ".net"]
+    for tld in valid_tld:
+        if url.find(tld) != -1:
+            return url[:url.find(tld)+4]
 
 def validate_url_and_get_recipe_class(url: str) -> tuple[str, Type[RecipeBase]]:
     """
