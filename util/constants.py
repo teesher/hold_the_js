@@ -1,20 +1,24 @@
-from typing import Type
-from recipe_util.base import RecipeBase
-from recipe_util.once_upon_a_chef import RecipeOnceUponAChef
-from recipe_util.salt_and_lavender import RecipeSaltAndLavender
-from recipe_util.all_recipes import RecipeAllRecipes
-from recipe_util.cooking_with_ayeh import RecipeCookingWithAyeh
-from recipe_util.culinary_hill import RecipeCulinaryHill
-from recipe_util.eat_with_clarity import RecipeEatWithClarity
-from recipe_util.feel_good_foodie import RecipeFeelGoodFoodie
-
-# Map URL prefixes to their corresponding recipe classes
-URL_PREFIX_TO_CLASS: dict[str, Type[RecipeBase]] = {
-    'https://www.onceuponachef.com': RecipeOnceUponAChef,
-    'https://www.saltandlavender.com': RecipeSaltAndLavender,
-    'https://www.allrecipes.com': RecipeAllRecipes,
-    'https://eatwithclarity.com': RecipeEatWithClarity,
-    'https://www.culinaryhill.com': RecipeCulinaryHill,
-    'https://cookingwithayeh.com': RecipeCookingWithAyeh,
-    'https://feelgoodfoodie.net': RecipeFeelGoodFoodie,
+# HTTP Request Headers
+REQUEST_HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+    'Accept-Language': 'en-US,en;q=0.5',
+    'Connection': 'keep-alive',
+    'Upgrade-Insecure-Requests': '1'
 }
+
+# URL Validation Constants
+ALLOWED_PROTOCOLS = ['http', 'https']
+
+LOCALHOST_PATTERNS = [
+    'localhost',
+    '0.0.0.0',
+    '0000:0000:0000:0000:0000:0000:0000:0001',
+    '0000:0000:0000:0000:0000:0000:0000:0000',
+    '::1',
+    '::',
+]
+
+MAX_URL_LENGTH = 2048
+
+VALID_TLD = [".com", ".net", ".org"]

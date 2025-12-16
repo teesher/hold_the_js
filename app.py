@@ -1,7 +1,7 @@
 from flask import Flask, redirect, jsonify
 import logging
-from recipe_util.base import RecipeBase
-from util.helpers import get_recipe_object_from_url
+from recipe_util.recipe import Recipe
+from util.helpers import get_recipe_object_from_url, URLValidationError, RecipeCreationError
 
 # Configure logging
 logging.basicConfig(
@@ -20,21 +20,18 @@ def hello_world():
 def process_url(url):
     logger.info(f"Processing URL: {url[:100]}")
     
-    recipe_object: RecipeBase | None = get_recipe_object_from_url(url)
-    
-    if recipe_object is None:
-        logger.warning(f"Invalid URL: {url[:100]}")
-        return jsonify({
-            "error": "Invalid URL",
-            "message": "url not supported"
-        }), 400
-    
     try:
+        recipe_object: Recipe = get_recipe_object_from_url(url)
         print_url = recipe_object.get_recipe_print_url()
-        logger.info(f"Redirecting to: {print_url[:100]}")
         return redirect(print_url, code=302)
-    except Exception as e:
-        logger.error(f"Error: {e}")
+    except (URLValidationError, RecipeCreationError) as e:
+        logger.warning(f"Invalid URL: {url[:100]} - Error: {str(e)}")
         return jsonify({
-            "error": "Failed to process recipe"
+            "error": "url not supported or invalid",
+            "details": str(e)
+        }), 400
+    except Exception as e:
+        logger.error(f"Unexpected error processing URL: {url[:100]} - Error: {str(e)}")
+        return jsonify({
+            "error": "internal server error"
         }), 500
