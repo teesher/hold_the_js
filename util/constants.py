@@ -8,7 +8,7 @@ REQUEST_HEADERS = {
 }
 
 # URL Validation Constants
-ALLOWED_PROTOCOLS = ['http', 'https']
+ALLOWED_PROTOCOLS = ['https']
 
 LOCALHOST_PATTERNS = [
     'localhost',
