@@ -3,6 +3,7 @@ import re
 import logging
 import requests
 from bs4 import BeautifulSoup as bs
+from util.constants import REQUEST_HEADERS
 
 STATUS_CODE_OK = 200
 # Reduced timeout from 300s to 30s to prevent resource exhaustion
@@ -37,19 +38,10 @@ class RecipeBase():
         Returns:
             BeautifulSoup object or None
         """
-        
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1'
-        }
-        
         try:
             response = requests.get(
                 url=self.url, 
-                headers=headers, 
+                headers=REQUEST_HEADERS, 
                 timeout=DEFAULT_TIMEOUT
             )
             
@@ -69,17 +61,6 @@ class RecipeBase():
         except Exception as e:
             self.logger.error(f"Unexpected error: {e}")
             return None
-        
-    def _get_wprm_print_url(self):
-        wprm_print_url = f"{self.base_url}/wprm_print{self.url.replace(self.base_url, '')}"
-        soup = self._retrieve_soup_from_url()
-
-        if wprm_print_url in soup.text:
-            return wprm_print_url
-        else:
-            # sometimes print url is not exactly same as on initial recipe page
-            print_a_tags = soup.find_all("a", href=re.compile(f"{self.base_url}/wprm_print/"))
-            return print_a_tags[0]["href"]
     
     @abc.abstractmethod
     def _get_recipe_print_url(self):
